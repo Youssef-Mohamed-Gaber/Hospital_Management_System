@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+              <!--  Inherit and modify existing PDF reports  -->
+    <template id="sale_report_inherit" inherit_id="sale.report_saleorder_document">
+        <xpath expr="//div[@class='row mt32 mb32']" position="after">
+            <div class="row mt32 mb32" id="test_inherit">
+                <div class="col-auto mw-100 mb-2">
+                    <strong>Test Report Customization</strong>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+</odoo>

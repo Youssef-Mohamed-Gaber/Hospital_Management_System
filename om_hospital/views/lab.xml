@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+            <!--  tree view of the lab model  -->
+    <record id="lab_tree" model="ir.ui.view">
+        <field name="name">hospital.lab.tree</field>
+        <field name="model">hospital.lab</field>
+        <field name="arch" type="xml">
+            <tree string="Labs">
+                <field name="name"/>
+                <field name="user_id"/>
+            </tree>
+        </field>
+    </record>
+
+            <!--  form view of the lab model  -->
+    <record id="lab_form" model="ir.ui.view">
+        <field name="name">hospital.lab.form</field>
+        <field name="model">hospital.lab</field>
+        <field name="arch" type="xml">
+            <form string="Labs">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                        <group>
+                            <field name="user_id"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+            <!--  action of the lab menu  -->
+    <record id="action_lab" model="ir.actions.act_window">
+        <field name="name">Labs</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hospital.lab</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create your First Lab!</p>
+        </field>
+    </record>
+
+    <menuitem id="hospital_lab" name="Labs" parent="hospital_root" action="action_lab"/>
+
+</odoo>

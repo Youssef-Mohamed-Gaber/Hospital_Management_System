@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+
+            <!--  tree view of the appointment model  -->
+    <record id="appointment_tree" model="ir.ui.view">
+        <field name="name">hospital.appointment.tree</field>
+        <field name="model">hospital.appointment</field>
+        <field name="arch" type="xml">
+            <tree string="Appointments" banner_route="/om_hospital/appointmens" decoration-info="state == 'draft'" decoration-muted="state == 'cancel'" decoration-success="state == 'done'" decoration-warning="state == 'confirm'">
+                <field name="name"/>
+                <field name="patient_id"/>
+                <field name="patient_age"/>
+                <field name="state"/>
+                <field name="appointment_date"/>
+            </tree>
+        </field>
+    </record>
+
+            <!--  pivot view of the appointment model  -->
+    <record id="appointment_pivot" model="ir.ui.view">
+        <field name="name">hospital.appointment.pivot</field>
+        <field name="model">hospital.appointment</field>
+        <field name="arch" type="xml">
+            <pivot string="Appointment Pivot">
+                <field name="patient_id" type="col"/>
+                <field name="appointment_date" type="row" interval="day"/>
+            </pivot>
+        </field>
+    </record>
+
+            <!--  calendar view of the appointment model  -->
+    <record id="appointment_calendar" model="ir.ui.view">
+        <field name="name">hospital.appointment.calender</field>
+        <field name="model">hospital.appointment</field>
+        <field name="arch" type="xml">
+            <calendar string="Appointment Calendar" date_start="appointment_date" color="patient_id" quick_add="False">
+                <field name="name"/>
+                <field name="patient_id"/>
+            </calendar>
+        </field>
+    </record>
+
+
+            <!--  graph view of the appointment model  -->
+    <record id="appointment_graph" model="ir.ui.view">
+        <field name="name">hospital.appointment.graph</field>
+        <field name="model">hospital.appointment</field>
+        <field name="arch" type="xml">
+            <graph string="Appointments Graph" type="pie">
+                <field name="patient_id"/>
+                <field name="amount" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+            <!--  activity view of the appointment model  -->
+    <record id="appointment_view_activity" model="ir.ui.view">
+        <field name="name">hospital.appointment.activity</field>
+        <field name="model">hospital.appointment</field>
+        <field name="arch" type="xml">
+            <activity string="Appointments">
+                <field name="doctor_id"/>
+                <templates>
+                    <div t-name="activity-box">
+
+                        <div>
+                            <field name="patient_id" display="full"/>
+                            <field name="doctor_id" muted="1" display="full" invisible="context.get('default_patient_id', False)"/>
+                        </div>
+                    </div>
+                </templates>
+            </activity>
+        </field>
+    </record>
+
+
+            <!--  form view of the appointment model  -->
+    <record id="appointment_form" model="ir.ui.view">
+        <field name="name">hospital.appointment.form</field>
+        <field name="model">hospital.appointment</field>
+        <field name="arch" type="xml">
+            <form string="Appointments">
+                <header>
+                    <button name="action_confirm" type="object" string="Confirm" states="draft" class="oe_highlight"/>
+                    <button name="action_done" type="object" string="Done" states="confirm" class="oe_highlight"/>
+                    <button name="action_concelled" type="object" string="Cancelled" states="done" class="oe_highlight"/>
+                    <button name="action_notify" type="object" string="notify" states="draft" class="oe_highlight"/>
+                    <button name="delete_lines" type="object" string="Delete Lines" class="oe_highlight"/>
+                    <button name="test_recordset" type="object" string="Test Recordset" class="oe_highlight"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm,done,cancel"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="patient_id" context="{'active_test': False}"/>
+                            <field name="patient_age"/>
+                            <field name="amount"/>
+                            <field name="doctor_id"/>
+                            <field name="assistant_doctors" widget="many2many_tags"/>
+                        </group>
+                        <group>
+                            <field name="appointment_date" options="{'datepicker': {'daysOfWeekDisabled': [5, 6]}}"/>
+                            <field name="appointment_date_end"/>
+                            <field name="product_id"/>
+                            <field name="partner_id"/>
+                            <field name="order_id_domain" invisible="1"/>
+                            <field name="order_id" domain="order_id_domain"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="notes"/>
+                    </group>
+                    <notebook>
+                        <page string="Doctor Prescription">
+                            <field name="appointment_lines">
+                                <tree editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="product_id"/>
+                                    <field name="product_qty"/>
+                                    <field name="appointment_id" invisible="1"/>
+                                </tree>
+                                <form>
+                                    <group>
+                                        <group>
+                                            <field name="product_id"/>
+                                        </group>
+                                        <group>
+                                            <field name="product_qty"/>
+                                        </group>
+                                    </group>
+                                </form>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread" options="{'post_refresh': 'recipients'}"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+
+            <!--  action of the appointment menu  -->
+    <record id="action_appointment" model="ir.actions.act_window">
+        <field name="name">Appointments</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hospital.appointment</field>
+        <field name="view_mode">tree,form,calendar,graph,pivot,activity</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create your First Appointment!</p>
+        </field>
+    </record>
+
+    <menuitem id="hospital_appointment" name="Appointments" parent="hospital_root" action="action_appointment" sequence="2"/>
+
+</odoo>

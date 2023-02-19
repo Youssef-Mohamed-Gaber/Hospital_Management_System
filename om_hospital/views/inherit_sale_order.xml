@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+
+            <!--  inherit and add field to existing view  -->
+    <record id="sale_order_inherit" model="ir.ui.view">
+        <field name="name">sale.order.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="patient_name"/>
+                <field name="is_patient"/>
+            </field>
+        </field>
+    </record>
+
+            <!--  inherit and make changes inside existing search view  -->
+    <record id="sale_order_search_inherit" model="ir.ui.view">
+        <field name="name">sale.order.search.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <field name="patient_name" string="Patient Name"/>
+                <filter string="Patient Record" name="patient_record" domain="[('is_patient', '=', True)]"/>
+                <filter string="Patient" name="patient_group_by" domain="[]" context="{'group_by': 'is_patient'}"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
